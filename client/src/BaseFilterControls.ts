@@ -49,6 +49,8 @@ export default abstract class BaseFilterControls<T extends Track | Group> {
   /* The confidence threshold to test confidecePairs against */
   confidenceFilters: Ref<Record<string, number>>;
 
+  trackLengthFilters: Ref<Record<string, number>>;
+
   /* The types informed by meta configuration */
   private defaultTypes: Ref<string[]>;
 
@@ -86,6 +88,7 @@ export default abstract class BaseFilterControls<T extends Track | Group> {
     this.checkedIDs = ref(params.sorted.value.map((t) => t.id));
 
     this.confidenceFilters = ref({ default: DefaultConfidence } as Record<string, number>);
+    this.trackLengthFilters = ref({ default: 0 } as Record<string, number>);
 
     this.defaultTypes = ref([]);
 

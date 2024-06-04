@@ -6,13 +6,14 @@ import {
   useTrackStyleManager,
 } from 'vue-media-annotator/provides';
 import ConfidenceFilter from 'dive-common/components/ConfidenceFilter.vue';
+import TrackLengthFilter from 'dive-common/components/TrackLengthFilter.vue';
 import { useApi } from 'dive-common/apispec';
 import { DefaultConfidence } from 'vue-media-annotator/BaseFilterControls';
 
 export default defineComponent({
   name: 'TypeThreshold',
 
-  components: { ConfidenceFilter },
+  components: { ConfidenceFilter, TrackLengthFilter },
 
   setup() {
     const trackFilters = useTrackFilters();
@@ -33,6 +34,7 @@ export default defineComponent({
     return {
       checkedTypesRef: trackFilters.checkedTypes,
       confidenceFiltersRef: trackFilters.confidenceFilters,
+      trackLengthFiltersRef: trackFilters.trackLengthFilters,
       typeStylingRef: useTrackStyleManager().typeStyling,
       resetThresholds,
       saveThreshold,
@@ -50,6 +52,11 @@ export default defineComponent({
     <ConfidenceFilter
       :confidence.sync="confidenceFiltersRef.default"
       text="Base Confidence Threshold"
+      @end="saveThreshold"
+    />
+    <TrackLengthFilter
+      :track-length.sync="trackLengthFiltersRef.default"
+      test="Base Number of Detections Threshold"
       @end="saveThreshold"
     />
     <v-divider class="my-3" />

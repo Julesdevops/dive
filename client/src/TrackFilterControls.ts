@@ -39,6 +39,7 @@ export default class TrackFilterControls extends BaseFilterControls<Track> {
       const filteredGroupsSet = new Set(params.groupFilterControls.enabledAnnotations.value
         .map((v) => v.annotation.id));
       const confidenceFiltersVal = cloneDeep(this.confidenceFilters.value);
+      const trackLengthFiltersVal = cloneDeep(this.trackLengthFilters.value);
       const resultsArr: AnnotationWithContext<Track>[] = [];
       const resultsIds: Set<AnnotationId> = new Set();
       params.sorted.value.forEach((annotation) => {
@@ -59,6 +60,13 @@ export default class TrackFilterControls extends BaseFilterControls<Track> {
             );
             return confval >= confidenceThresh && checkedSet.has(confkey);
           });
+
+        const track = params.getTrack(annotation.id);
+        const passesTrackLengthFilter = track.featureIndex.length > trackLengthFiltersVal.default;
+        if (!passesTrackLengthFilter) {
+          return;
+        }
+
         /* include annotations where at least 1 confidence pair is above
          * the threshold and part of the checked type set */
         if (

@@ -40,6 +40,7 @@ export default class TrackFilterControls extends BaseFilterControls<Track> {
         .map((v) => v.annotation.id));
       const confidenceFiltersVal = cloneDeep(this.confidenceFilters.value);
       const trackLengthFiltersVal = cloneDeep(this.trackLengthFilters.value);
+      const featureAreaFiltersVal = cloneDeep(this.featureAreaFilters.value);
       const resultsArr: AnnotationWithContext<Track>[] = [];
       const resultsIds: Set<AnnotationId> = new Set();
       params.sorted.value.forEach((annotation) => {
@@ -62,6 +63,23 @@ export default class TrackFilterControls extends BaseFilterControls<Track> {
           });
 
         const track = params.getTrack(annotation.id);
+        const feat = track.features.findIndex((feature) => {
+          if (!feature) {
+            return false;
+          }
+          const { bounds } = feature;
+          if (!bounds) {
+            return false;
+          }
+          const bboxArea = Math.abs((bounds[1] - bounds[0]) * (bounds[3] - bounds[2]));
+          // const f = feature.geometry?.features[0].geometry.coordinates[0];
+          return bboxArea > featureAreaFiltersVal.default;
+        });
+
+        if (feat < 0) {
+          return;
+        }
+
         const passesTrackLengthFilter = track.featureIndex.length > trackLengthFiltersVal.default;
         if (!passesTrackLengthFilter) {
           return;

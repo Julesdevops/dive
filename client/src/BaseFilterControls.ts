@@ -51,6 +51,8 @@ export default abstract class BaseFilterControls<T extends Track | Group> {
 
   trackLengthFilters: Ref<Record<string, number>>;
 
+  featureAreaFilters: Ref<Record<string, number>>;
+
   /* The types informed by meta configuration */
   private defaultTypes: Ref<string[]>;
 
@@ -89,6 +91,7 @@ export default abstract class BaseFilterControls<T extends Track | Group> {
 
     this.confidenceFilters = ref({ default: DefaultConfidence } as Record<string, number>);
     this.trackLengthFilters = ref({ default: 0 } as Record<string, number>);
+    this.featureAreaFilters = ref({ default: 0 } as Record<string, number>);
 
     this.defaultTypes = ref([]);
 
